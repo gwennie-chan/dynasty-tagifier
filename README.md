@@ -1,5 +1,5 @@
 # Dynasty Tagifier
-Dynasty Tagifier is a **Tampermonkey** userscript for use on [dynasty-scans.com](https://dynasty-scans.com) to add functionality not present that may be beneficial. As the name suggestions, it focuses on functionality regarding [site tags](https://dynasty-scans.com/tags).
+Dynasty Tagifier is a **[Tampermonkey](https://tampermonkey.net/)** userscript for use on [dynasty-scans.com](https://dynasty-scans.com) to add functionality not present that may be beneficial. As the name suggestions, it focuses on functionality regarding [site tags](https://dynasty-scans.com/tags).
 
 ### Features
 **Forum Tagger** :white_check_mark:
