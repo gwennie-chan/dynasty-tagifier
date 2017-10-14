@@ -1,24 +1,23 @@
 // ==UserScript==
 // @name         Dynasty Tagifier
 // @homepageURL  https://github.com/gwennie-chan
-// @supportURL   https://github.com/gwennie-chan/dynasty-tagifier
 // @downloadURL  https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
 // @updateURL    https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
-// @version      0.1
+// @version      1.0
 // @description  Dynasty-Scans.com Tag Modifications
 // @author       Gwennie-Chan
 // @include      https://dynasty-scans.com/forum/topics/*
+// @include		 https://dynasty-scans.com/user/suggestions
 // @require      https://code.jquery.com/jquery-3.2.1.min.js#sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @grant        GM_listValues
-// @run-at		 document-end
 // ==/UserScript==
 
 //---Global Variables---
 const dynastyURL = "https://dynasty-scans.com/tags.json";
 const tagURLstub = "https://dynasty-scans.com/tags/";
-const version = 0.1;
+const version = 0.11;
+const currentURL = window.location.pathname;
 var mainJSON = null;
 var nameArray = [];
 var urlArray = [];
@@ -88,12 +87,45 @@ function forumTagger() {
 }
 
 function injectCSS() {
-	$("<style>").prop("type", "text/css").html("\.tagified:hover{text-decoration:underline !important;color:#990000 !important;}").prependTo("head");
+	$("<style>").prop("type", "text/css").html('\.tagified:hover{text-decoration:underline !important;color:#990000 !important;}\#controller{text-align:center;font-size:0.75em;font-weight:normal;}\#controller input{margin: 10px 20px;display:inline-block;}').prependTo("head");
+}
+
+function tagSelectionSwitcher() {
+	//console.log("Starting TCC");
+	$('#main h2').html('<h2>Suggestions Status</h2><div id="controller"><input type="checkbox" id="acceptedCont" checked><span class="text-success">Accepted</span></input><input type="checkbox" id="pendingCont" checked><span class="text-info">Pending</span></input><input type="checkbox" id="rejectedCont" checked><span class="text-error">Rejected</span></input></div>');
 }
 
 //---Main---
 //console.log("Running Dynasty Tagifier v" + version);
-injectCSS();
-$.when(JSONizer()).done(function(){
-	forumTagger();
+$.when($.ready).done(function (){
+	injectCSS();
+	if (currentURL == "/user/suggestions"){
+		tagSelectionSwitcher();
+		$('#acceptedCont').click(function() {
+			if ($(this).is(':checked')) {
+				$('.suggestion-accepted').fadeIn();
+			}
+			else {
+				$('.suggestion-accepted').fadeOut();
+			}});
+		$('#pendingCont').click(function() {
+			if ($(this).is(':checked')) {
+				$('.suggestion-pending').fadeIn();
+			}
+			else {
+				$('.suggestion-pending').fadeOut();
+			}});
+		$('#rejectedCont').click(function() {
+			if ($(this).is(':checked')) {
+				$('.suggestion-rejected').fadeIn();
+			}
+			else {
+				$('.suggestion-rejected').fadeOut();
+			}});
+	}
+	else if (currentURL != "/user/suggestions"){
+		$.when(JSONizer()).done(function(){
+			forumTagger();
+		});
+	}
 });
