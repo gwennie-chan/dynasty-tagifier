@@ -2,6 +2,7 @@
 // @name         Dynasty Tagifier
 // @homepageURL  https://github.com/gwennie-chan
 // @supportURL   https://github.com/gwennie-chan/dynasty-tagifier
+// @downloadURL  https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
 // @version      0.1
 // @description  Dynasty-Scans.com Tag Modifications
 // @author       Gwennie-Chan
