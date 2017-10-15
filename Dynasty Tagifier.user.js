@@ -3,10 +3,10 @@
 // @homepageURL  https://github.com/gwennie-chan
 // @downloadURL  https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
 // @updateURL    https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
-// @version      1.0
+// @version      1.01
 // @description  Dynasty-Scans.com Tag Modifications
 // @author       Gwennie-Chan
-// @include      https://dynasty-scans.com/forum/topics/*
+// @include      https://dynasty-scans.com/forum/*
 // @include		 https://dynasty-scans.com/user/suggestions
 // @require      https://code.jquery.com/jquery-3.2.1.min.js#sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=
 // @grant        GM_setValue
@@ -16,7 +16,7 @@
 //---Global Variables---
 const dynastyURL = "https://dynasty-scans.com/tags.json";
 const tagURLstub = "https://dynasty-scans.com/tags/";
-const version = 0.11;
+const version = 1.01;
 const currentURL = window.location.pathname;
 var mainJSON = null;
 var nameArray = [];
@@ -78,9 +78,12 @@ function forumTagger() {
 	//console.log("Checking Blocks For Tag Matches");
 	$('code').each(function(){
 		for(i = 0;i<nameArray.length;i++){
-			if(this.innerHTML == nameArray[i]){
+			var lowerHTML = this.innerHTML.toLowerCase();
+			var lowerArray = nameArray[i].toLowerCase();
+			if(lowerHTML == lowerArray){
 				//console.log("Match Found: ",this.innerHTML);
-				$(this).html('<a href=' + tagURLstub + urlArray[i] + ' class="tagified" style="text-decoration:none;color:inherit;">' + this.innerHTML + '</a>');
+				var correctedHTML = lowerHTML.replace(/\b./g, function(m){ return m.toUpperCase(); });
+				$(this).html('<a href=' + tagURLstub + urlArray[i] + ' class="tagified" style="text-decoration:none;color:inherit;">' + correctedHTML + '</a>');
 			}
 		}
 	});
