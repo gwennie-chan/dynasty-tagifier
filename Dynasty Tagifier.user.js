@@ -3,11 +3,12 @@
 // @homepageURL  https://github.com/gwennie-chan
 // @downloadURL  https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
 // @updateURL    https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
-// @version      1.01
+// @version      1.10
 // @description  Dynasty-Scans.com Tag Modifications
 // @author       Gwennie-Chan
 // @include      https://dynasty-scans.com/forum/*
 // @include		 https://dynasty-scans.com/user/suggestions
+// @include		 https://dynasty-scans.com/images/*
 // @require      https://code.jquery.com/jquery-3.2.1.min.js#sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -16,7 +17,7 @@
 //---Global Variables---
 const dynastyURL = "https://dynasty-scans.com/tags.json";
 const tagURLstub = "https://dynasty-scans.com/tags/";
-const version = 1.01;
+const version = 1.10;
 const currentURL = window.location.pathname;
 var mainJSON = null;
 var nameArray = [];
@@ -126,7 +127,7 @@ $.when($.ready).done(function (){
 				$('.suggestion-rejected').fadeOut();
 			}});
 	}
-	else if (currentURL != "/user/suggestions"){
+	else if ($('currentURL:has("forum")') ||  $('currentURL:has("images")')){
 		$.when(JSONizer()).done(function(){
 			forumTagger();
 		});
