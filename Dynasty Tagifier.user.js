@@ -3,7 +3,7 @@
 // @homepageURL  https://github.com/gwennie-chan
 // @downloadURL  https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
 // @updateURL    https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
-// @version      1.12
+// @version      1.13
 // @description  Dynasty-Scans.com Tag Modifications
 // @author       Gwennie-Chan
 // @include      https://dynasty-scans.com/forum/*
@@ -16,76 +16,34 @@
 //---Global Variables---
 const dynastyURL = "https://dynasty-scans.com/tags.json";
 const tagURLstub = "https://dynasty-scans.com/tags/";
-const version = 1.12;
+const version = 1.13;
 const currentURL = window.location.pathname;
-var mainJSON = null;
-var nameArray = [];
-var urlArray = [];
 
 //---Component Functions---
-function JSONizer(){
-	//console.log("JSON Master Function Started");
-	$.when(updateJSON()).done(sortJSON());
-}
 
-function updateJSON(){
-	$.when(pullJSON()).done(function () {
-		$.when(mainJSON = GM_getValue("json")).done(function () {
-			//console.log("JSON Local Variable Set: ",mainJSON);
-		});
+// Generate a lookup table from tags.json mapping lowercase tag names to {name, permalink}
+function createTagMap() {
+	return $.getJSON(dynastyURL).then(data => {
+		const tagMap = {};
+		Object.values(data).forEach(tagBin =>
+			tagBin.forEach(nameLink =>
+				tagMap[nameLink.name.toLowerCase()] = nameLink));
+		return tagMap;
 	});
-}
-
-function pullJSON(){
-	var results = $.get({
-		'url':dynastyURL,
-		'global':"false",
-		'dataType':"json",
-		'success':function (data){
-			//console.log("JSON Get and Parse Successful: ",data);
-			$.when(GM_setValue("json",data)).done(/*console.log("JSON Stored Successfully: ",GM_getValue("json"))*/);
-		}
-	});
-}
-
-function sortJSON(){
-	//console.log("JSON Array Sorting Started");
-	var tempNameArray = [];
-	var tempURLArray = [];
-	const tagID = ["#","A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","R","S","T","V","W","Y","Z"];
-	const tagLength = tagID.length;
-	var tagLengthArray = [];
-	for (i=0;i<tagLength;i++){
-		//console.log("Sorting - Computing Preliminary Array Length");
-		tagLengthArray.push(mainJSON[tagID[i]].length);
-	}
-	for (i=0;i<tagLength;i++){
-		//console.log("Sorting - Creating Tag Array");
-		for(x=0;x<tagLengthArray[i];x++){
-			tempNameArray.push(mainJSON[tagID[i]][x].name);
-			tempURLArray.push(mainJSON[tagID[i]][x].permalink);
-		}
-	}
-	//if (tempNameArray.length == tempURLArray.length){console.log("Array Validated");	}
-	//else {console.log("Array Invalid - Error");}
-	//console.log("Sorting Completed - Pushing Values To Main");
-	nameArray = tempNameArray;
-	urlArray = tempURLArray;
 }
 
 function forumTagger() {
 	//console.log("Starting Forum Tagger");
 	//console.log("Checking Blocks For Tag Matches");
-	$('code').each(function(){
-		for(i = 0;i<nameArray.length;i++){
+	createTagMap().then(tagMap => {
+		$('code').each(function(){
+			// Lookup the tag table and linkify if key exists
 			var lowerHTML = this.innerHTML.toLowerCase();
-			var lowerArray = nameArray[i].toLowerCase();
-			if(lowerHTML == lowerArray){
-				//console.log("Match Found: ",this.innerHTML);
-				var correctedHTML = lowerHTML.replace(/\b./g, function(m){ return m.toUpperCase(); });
-				$(this).html('<a href=' + tagURLstub + urlArray[i] + ' class="tagified" style="text-decoration:none;color:inherit;">' + correctedHTML + '</a>');
+			if (tagMap.hasOwnProperty(lowerHTML)) {
+				var nameLink = tagMap[lowerHTML];
+				$(this).html(`<a href=${tagURLstub}${nameLink.permalink} class="tagified" style="text-decoration:none;color:inherit;">${nameLink.name}</a>`);
 			}
-		}
+		});
 	});
 }
 
@@ -127,8 +85,6 @@ $.when($.ready).done(function (){
 			}});
 	}
 	else if ($('currentURL:has("forum")') ||  $('currentURL:has("images")')){
-		$.when(JSONizer()).done(function(){
-			forumTagger();
-		});
+		forumTagger();
 	}
 });
