@@ -1,22 +1,22 @@
 // ==UserScript==
 // @name         Dynasty Tagifier
+// @namespace	 gc-tagifier
 // @homepageURL  https://github.com/gwennie-chan
 // @downloadURL  https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
 // @updateURL    https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
-// @version      1.13
+// @version      1.14
 // @description  Dynasty-Scans.com Tag Modifications
 // @author       Gwennie-Chan
-// @include      https://dynasty-scans.com/forum/*
+// @include		 https://dynasty-scans.com/forum/*
 // @include		 https://dynasty-scans.com/user/suggestions
 // @include		 https://dynasty-scans.com/images/*
-// @grant        GM_setValue
-// @grant        GM_getValue
+// @run-at		 document-end
 // ==/UserScript==
 
 //---Global Variables---
 const dynastyURL = "https://dynasty-scans.com/tags.json";
 const tagURLstub = "https://dynasty-scans.com/tags/";
-const version = 1.13;
+const version = 1.14;
 const currentURL = window.location.pathname;
 
 //---Component Functions---
