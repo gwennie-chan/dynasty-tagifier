@@ -4,9 +4,10 @@
 // @homepageURL  https://github.com/gwennie-chan
 // @downloadURL  https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
 // @updateURL    https://github.com/gwennie-chan/dynasty-tagifier/raw/master/Dynasty%20Tagifier.user.js
-// @version      1.14
+// @version      1.15
 // @description  Dynasty-Scans.com Tag Modifications
 // @author       Gwennie-Chan
+// @include      https://dynasty-scans.com/forum*
 // @include		 https://dynasty-scans.com/forum/*
 // @include		 https://dynasty-scans.com/user/suggestions
 // @include		 https://dynasty-scans.com/images/*
@@ -16,7 +17,7 @@
 //---Global Variables---
 const dynastyURL = "https://dynasty-scans.com/tags.json";
 const tagURLstub = "https://dynasty-scans.com/tags/";
-const version = 1.14;
+const version = 1.15;
 const currentURL = window.location.pathname;
 
 //---Component Functions---
@@ -56,6 +57,27 @@ function tagSelectionSwitcher() {
 	$('#main h2').html('<h2>Suggestions Status</h2><div id="controller"><input type="checkbox" id="acceptedCont" checked><span class="text-success">Accepted</span></input><input type="checkbox" id="pendingCont" checked><span class="text-info">Pending</span></input><input type="checkbox" id="rejectedCont" checked><span class="text-error">Rejected</span></input></div>');
 }
 
+function statsShortener() {
+    $('.views_count b').each(function(){
+        var vCount = parseFloat(this.innerHTML.replace(/,/g, ''));
+        //console.log("Converted View Count " + vCount);
+        $(this).html(numShorten(vCount));
+    });
+    $('.posts_count b').each(function(){
+        var vCount = parseFloat(this.innerHTML.replace(/,/g, ''));
+        //console.log("Converted View Count " + vCount);
+        $(this).html(numShorten(vCount));
+    });
+}
+
+function numShorten(num) {
+    if(num >= 1000000){return parseFloat(num/1000000).toFixed(1) + "M";}
+    else if (num >= 100000){return Math.round(num/1000) + "K";}
+    else if (num >= 10000){return Math.round(num/100) + "K";}
+    else if (num >= 1000){return parseFloat(num/1000).toFixed(2) + "K";}
+    else {return num;}
+}
+
 //---Main---
 //console.log("Running Dynasty Tagifier v" + version);
 $.when($.ready).done(function (){
@@ -84,7 +106,10 @@ $.when($.ready).done(function (){
 				$('.suggestion-rejected').fadeOut();
 			}});
 	}
-	else if ($('currentURL:has("forum")') ||  $('currentURL:has("images")')){
+	if ($('currentURL:has("forum")') ||  $('currentURL:has("images")')){
 		forumTagger();
 	}
+    if (currentURL == "/forum"){
+        statsShortener();
+    }
 });
