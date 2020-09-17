@@ -8,3 +8,6 @@ Dynasty Tagifier is a **[Tampermonkey](https://tampermonkey.net/)** userscript f
 
 **Tag Suggestions Switcher (TSS)** :white_check_mark:
 > TSS puts a controller bar on the [tag suggestions status page](https://dynasty-scans.com/user/suggestions) (link requires account) so users can select the type of tag suggestions (`Approved`, `Rejected`, or `Pending`) the page displays, whether a single type, a mixture, or all of them.
+
+**Forum Stats Number Shortener (FSNS)** :white_check_mark:
+> FSNS converts the stats numbers on the Forum navigation pages for views and posts to automatically shorten, round anything over 1000 and insert the appropriate abbreviation ("K" or "M") after the shortened number.
